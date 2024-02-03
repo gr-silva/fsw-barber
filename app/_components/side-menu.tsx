@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarImage } from "@/app/_components/ui/avatar";
 import {
   LogOutIcon,
   UserIcon,
@@ -8,8 +8,8 @@ import {
   HomeIcon,
   CalendarIcon,
 } from "lucide-react";
-import { Button } from "./ui/button";
-import { SheetHeader, SheetTitle } from "./ui/sheet";
+import { Button } from "@/app/_components/ui/button";
+import { SheetHeader, SheetTitle } from "@/app/_components/ui/sheet";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
