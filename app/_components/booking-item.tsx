@@ -35,6 +35,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/app/_components/ui/alert-dialog";
+import BookingInfo from "./booking-info";
 
 interface BookingItemProps {
   booking: Prisma.BookingGetPayload<{
@@ -130,85 +131,52 @@ const BookingItem = ({ booking }: BookingItemProps) => {
             {isBookingConfirmed ? "Confirmado" : "Finalizado"}
           </Badge>
 
-          <div className="border-t border-solid border-secondary px-5 py-6">
-            <Card>
-              <CardContent className="flex flex-col gap-3 p-3">
-                <div className="flex justify-between">
-                  <h2 className="font-bold">{booking.service.name}</h2>
-                  <h3 className="text-sm font-bold">
-                    {Intl.NumberFormat("pt-BR", {
-                      style: "currency",
-                      currency: "BRL",
-                    }).format(Number(booking.service.price))}
-                  </h3>
-                </div>
+          <BookingInfo booking={booking} />
 
-                <div className="flex justify-between">
-                  <h3 className="text-sm text-gray-400">Data</h3>
-                  <h4 className="text-sm">
-                    {format(booking.date, "dd 'de' MMMM", {
-                      locale: ptBR,
-                    })}
-                  </h4>
-                </div>
+          <SheetFooter className="mt-6 flex-row gap-3">
+            <SheetClose asChild>
+              <Button variant={"secondary"} className="w-full">
+                Voltar
+              </Button>
+            </SheetClose>
 
-                <div className="flex justify-between">
-                  <h3 className="text-sm text-gray-400">Horário</h3>
-                  <h4 className="text-sm">{format(booking.date, "hh:mm")}</h4>
-                </div>
-
-                <div className="flex justify-between">
-                  <h3 className="text-sm text-gray-400">Barbearia</h3>
-                  <h4 className="text-sm">{booking.barbershop.name}</h4>
-                </div>
-              </CardContent>
-            </Card>
-
-            <SheetFooter className="mt-6 flex-row gap-3">
-              <SheetClose asChild>
-                <Button variant={"secondary"} className="w-full">
-                  Voltar
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  disabled={!isBookingConfirmed || isDeleteLoading}
+                  variant={"destructive"}
+                  className="w-full"
+                >
+                  Cancelar Reserva
                 </Button>
-              </SheetClose>
-
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button
-                    disabled={!isBookingConfirmed || isDeleteLoading}
-                    variant={"destructive"}
+              </AlertDialogTrigger>
+              <AlertDialogContent className="w-[90%]">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Deseja mesmo cancelar esta reserva?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Uma vez cancelada, não será possível reverter esta ação.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter className="flex-row gap-3">
+                  <AlertDialogCancel className="mt-0 w-full">
+                    Voltar
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleCancelClick}
                     className="w-full"
+                    disabled={isDeleteLoading}
                   >
-                    Cancelar Reserva
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent className="w-[90%]">
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Deseja mesmo cancelar esta reserva?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      Uma vez cancelada, não será possível reverter esta ação.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter className="flex-row gap-3">
-                    <AlertDialogCancel className="mt-0 w-full">
-                      Voltar
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      onClick={handleCancelClick}
-                      className="w-full"
-                      disabled={isDeleteLoading}
-                    >
-                      {isDeleteLoading && (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      )}
-                      Confirmar
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </SheetFooter>
-          </div>
+                    {isDeleteLoading && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Confirmar
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </SheetFooter>
         </div>
       </SheetContent>
     </Sheet>
